@@ -8,7 +8,7 @@
 (global-display-line-numbers-mode 1)
 (desktop-save-mode 1)
 (global-visual-line-mode 1)
-(global-tree-sitter-mode)
+;; (global-tree-sitter-mode)
 (setq visible-bell 1)
 (setq mode-require-final-newline nil)
 ;; (unless (equal 'fullscreen 'fullboth)
@@ -139,7 +139,6 @@
 ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
 
 (use-package projectile
-  :ensure t
   :config (projectile-mode +1)
   :custom ((projectile-completion-system 'helm))
   :bind
@@ -150,21 +149,3 @@
   ;; (setq projectile-switch-project-action #'projectile-dired)
   )
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(quelpa-use-package quelpa tsx-mode tree-sitter-langs rust-mode d2-mode undo-tree timu-spacegrey-theme cobalt-theme projectile dap-lldb dap-mode lsp-treemacs helm-lsp lsp-ui lsp-mode magit elpy use-package org-ref gruvbox-theme))
- '(python-interpreter "python3")
- '(python-shell-interpreter "python3")
- '(python-shell-interpreter-args ""))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(hl-line ((t (:extend t :background "#45672c"))))
- '(linum ((t (:background "#2e3d39" :foreground "steel blue")))))
-(put 'dired-find-alternate-file 'disabled nil)
