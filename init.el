@@ -107,6 +107,11 @@
   :after tree-sitter)
 
 (global-tree-sitter-mode)
+
+(use-package tsx-mode
+  :quelpa (tsx-mode :fetcher github :repo "orzechowskid/tsx-mode.el"))
+
+
 ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 ;; ;;lsp-mode
@@ -161,7 +166,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(tree-sitter-langs rust-mode d2-mode undo-tree timu-spacegrey-theme cobalt-theme projectile dap-lldb dap-mode lsp-treemacs helm-lsp lsp-ui lsp-mode magit elpy use-package org-ref gruvbox-theme))
+   '(quelpa-use-package quelpa tsx-mode tree-sitter-langs rust-mode d2-mode undo-tree timu-spacegrey-theme cobalt-theme projectile dap-lldb dap-mode lsp-treemacs helm-lsp lsp-ui lsp-mode magit elpy use-package org-ref gruvbox-theme))
  '(python-interpreter "python3")
  '(python-shell-interpreter "python3")
  '(python-shell-interpreter-args ""))
