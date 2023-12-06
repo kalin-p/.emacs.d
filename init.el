@@ -8,7 +8,7 @@
 (global-display-line-numbers-mode 1)
 (desktop-save-mode 1)
 (global-visual-line-mode 1)
-;; (global-tree-sitter-mode)
+
 (setq visible-bell 1)
 (setq mode-require-final-newline nil)
 ;; (unless (equal 'fullscreen 'fullboth)
@@ -16,8 +16,9 @@
 
 ;;Org mode
 (setq org-startup-indented t)
+;; (setq treesit-extra-load-path '("~/.emacs.d/straight/build/tree-sitter-langs"))
+(setq tree-sitter-load-path '("~/.emacs.d/straight/build/tree-sitter-langs"))
 (add-to-list 'load-path (file-name-as-directory "/home/kalin/.emacs.d/replace-colorthemes/"))
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -38,13 +39,9 @@
 (use-package timu-spacegrey-theme)
 
 (load-theme 'timu-spacegrey t)
-;; (load-theme 'cobalt t)
 
-;;pdf-tools
-;; (use-package pdf-tools
-;;   :ensure t)
+(use-package tree-sitter-langs)
 
-;;magit
 (use-package magit)
 
 (use-package d2-mode)
@@ -98,8 +95,16 @@
   :config
   (add-hook 'rust-mode-hook 'eglot-ensure))
 
+(use-package coverlay)
+
+(use-package origami)
+
+(use-package css-in-js-mode
+  :straight '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
+
 (use-package tsx-mode
-  :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el"))
+  :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el")
+  :after (coverlay css-in-js-mode origami))
 
 
 ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
