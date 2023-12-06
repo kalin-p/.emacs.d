@@ -8,6 +8,7 @@
 (global-display-line-numbers-mode 1)
 (desktop-save-mode 1)
 (global-visual-line-mode 1)
+(global-tree-sitter-mode)
 (setq visible-bell 1)
 (setq mode-require-final-newline nil)
 ;; (unless (equal 'fullscreen 'fullboth)
@@ -15,22 +16,26 @@
 
 ;;Org mode
 (setq org-startup-indented t)
-
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(package-initialize)
-
 (add-to-list 'load-path (file-name-as-directory "/home/kalin/.emacs.d/replace-colorthemes/"))
 
-;;use-package
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(straight-use-package 'use-package)
 
-(use-package timu-spacegrey-theme
-  :ensure t)
+(setq straight-use-package-by-default t)
+
+(use-package timu-spacegrey-theme)
 
 (load-theme 'timu-spacegrey t)
 ;; (load-theme 'cobalt t)
@@ -40,20 +45,16 @@
 ;;   :ensure t)
 
 ;;magit
-(use-package magit
-  :ensure t)
+(use-package magit)
 
-(use-package d2-mode
-  :ensure t)
+(use-package d2-mode)
 
 (use-package undo-tree
-  :ensure t
   :init
   (global-undo-tree-mode))
 
 ;;helm
 (use-package helm
-  :ensure t
   :config
   (global-set-key (kbd "M-x") #'helm-M-x)
   (global-set-key (kbd "C-x C-f") #'helm-find-files)
@@ -74,23 +75,19 @@
 
 ;;yasnippet
 (use-package yasnippet
-  :ensure t
   :init
   (yas-global-mode 1))
 
 ;;which-key
 (use-package which-key
-  :ensure t
   :init
   (which-key-mode))
 
 (use-package elpy
-  :ensure t
   :init
   (elpy-enable))
 
 (use-package company
-  :ensure t
   :config
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 2)
@@ -98,18 +95,11 @@
   (global-company-mode))
 
 (use-package rust-mode
-  :ensure t
   :config
   (add-hook 'rust-mode-hook 'eglot-ensure))
 
-(use-package tree-sitter-langs
-  :ensure t
-  :after tree-sitter)
-
-(global-tree-sitter-mode)
-
 (use-package tsx-mode
-  :quelpa (tsx-mode :fetcher github :repo "orzechowskid/tsx-mode.el"))
+  :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el"))
 
 
 ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
