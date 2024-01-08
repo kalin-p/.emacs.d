@@ -11,6 +11,8 @@
 
 (setq visible-bell 1)
 (setq mode-require-final-newline nil)
+(setq backup-directory-alist '(("." . "~/.emacs_backups"))
+      undo-tree-history-directory-alist '(("." . "~/.emacs_undos")))
 ;; (unless (equal 'fullscreen 'fullboth)
 ;;   (toggle-frame-fullscreen))
 
