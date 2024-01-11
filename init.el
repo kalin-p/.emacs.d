@@ -16,10 +16,15 @@
 ;; (unless (equal 'fullscreen 'fullboth)
 ;;   (toggle-frame-fullscreen))
 
+;; (add-hook 'python-mode-hook 'python-ts-mode)
+
+;; (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+;; (add-hook 'python-ts-mode-hook 'tree-sitter-hl-mode)
+
 ;;Org mode
 (setq org-startup-indented t)
 ;; (setq treesit-extra-load-path '("~/.emacs.d/straight/build/tree-sitter-langs"))
-(setq tree-sitter-load-path '("~/.emacs.d/straight/build/tree-sitter-langs"))
+(setq treesit-extra-load-path '("~/.emacs.d/straight/build/tree-sitter-langs/bin"))
 (add-to-list 'load-path (file-name-as-directory "/home/kalin/.emacs.d/replace-colorthemes/"))
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -43,6 +48,17 @@
 (load-theme 'timu-spacegrey t)
 
 (use-package tree-sitter-langs)
+
+(defun conform-ts-langs-grammars-naming ()
+  (let* ((dir (car-safe treesit-extra-load-path))
+	 (grammars (directory-files dir nil ".+\.so"))
+	 (oldnames (mapcar (lambda (grammar) (concat dir "/" grammar)) grammars))
+	 (newnames (mapcar (lambda (grammar) (concat dir "/" "libtree-sitter-" grammar)) grammars))
+	 (zipped (mapcar* 'cons oldnames newnames)))
+    (dolist (item zipped)
+      ;; (print (cdr item))
+      (rename-file (car item) (cdr item) nil))))
+
 
 (use-package magit)
 
@@ -97,53 +113,21 @@
   :config
   (add-hook 'rust-mode-hook 'eglot-ensure))
 
-(use-package coverlay)
+;; (use-package coverlay)
 
-(use-package origami)
+;; (use-package origami)
 
-(use-package css-in-js-mode
-  :straight '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
+;; (use-package css-in-js-mode
+;;   :straight '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
 
-(use-package tsx-mode
-  :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el")
-  :after (coverlay css-in-js-mode origami))
+;; (use-package tsx-mode
+;;   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el")
+;;   :after (coverlay css-in-js-mode origami))
 
-
-;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-;; ;;lsp-mode
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :init
-;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-;;          (c++-mode . lsp)
-;; 	 (c-mode . lsp)
-;;          ;; if you want which-key integration
-;;          (lsp-mode . lsp-enable-which-key-integration))
-;;   :commands lsp)
-
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :commands lsp-ui-mode)
-
-;; (use-package helm-lsp
-;;   :ensure t
-;;   :commands helm-lsp-workspace-symbol)
-
-;; (use-package lsp-treemacs
-;;   :ensure t
-;;   :commands lsp-treemacs-errors-list)
-
-;; ;; optionally if you want to use debugger
-;; (use-package dap-mode
-;;   :ensure t)
-
-;; (require 'dap-lldb)
-;; ;; (use-package dap-lldb
-;; ;;   :ensure t)
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+(use-package tide
+  :config
+  (setq typescript-indent-level 2)
+  (add-hook 'tsx-mode-hook #'setup-tide-mode))
 
 (use-package projectile
   :config (projectile-mode +1)
