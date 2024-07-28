@@ -1,31 +1,3 @@
-;;Basic settings
-(setq inhibit-startup-message t)
-(scroll-bar-mode -1)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(global-hl-line-mode 1)
-(delete-selection-mode 1)
-(global-display-line-numbers-mode 1)
-(desktop-save-mode 1)
-(global-visual-line-mode 1)
-
-(setq visible-bell 1)
-(setq mode-require-final-newline nil)
-(setq backup-directory-alist '(("." . "~/.emacs_backups"))
-      undo-tree-history-directory-alist '(("." . "~/.emacs_undos")))
-;; (unless (equal 'fullscreen 'fullboth)
-;;   (toggle-frame-fullscreen))
-
-;; (add-hook 'python-mode-hook 'python-ts-mode)
-
-;; (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-;; (add-hook 'python-ts-mode-hook 'tree-sitter-hl-mode)
-
-;;Org mode
-(setq org-startup-indented t)
-;; (setq treesit-extra-load-path '("~/.emacs.d/straight/build/tree-sitter-langs"))
-(setq treesit-extra-load-path '("~/.emacs.d/straight/build/tree-sitter-langs/bin"))
-(add-to-list 'load-path (file-name-as-directory "/home/kalin/.emacs.d/replace-colorthemes/"))
 (defvar bootstrap-version)
 (let ((bootstrap-file
       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -43,32 +15,31 @@
 
 (setq straight-use-package-by-default t)
 
-(use-package timu-spacegrey-theme)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(global-hl-line-mode 1)
+(delete-selection-mode 1)
+(global-display-line-numbers-mode 1)
+(column-number-mode)
+(desktop-save-mode 1)
+(global-visual-line-mode 1)
 
+(setq visible-bell 1
+      mode-require-final-newline nil
+      inhibit-startup-message t
+      backup-directory-alist '(("." . "~/.emacs_backups"))
+      undo-tree-history-directory-alist '(("." . "~/.emacs_undos")))
+
+(setq-default fill-column 80)
+
+(global-set-key (kbd "C-x k") #'kill-this-buffer)
+
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
+(use-package timu-spacegrey-theme)
 (load-theme 'timu-spacegrey t)
 
-(use-package tree-sitter-langs)
-
-(defun conform-ts-langs-grammars-naming ()
-  (let* ((dir (car-safe treesit-extra-load-path))
-	 (grammars (directory-files dir nil ".+\.so"))
-	 (oldnames (mapcar (lambda (grammar) (concat dir "/" grammar)) grammars))
-	 (newnames (mapcar (lambda (grammar) (concat dir "/" "libtree-sitter-" grammar)) grammars))
-	 (zipped (mapcar* 'cons oldnames newnames)))
-    (dolist (item zipped)
-      ;; (print (cdr item))
-      (rename-file (car item) (cdr item) nil))))
-
-
-(use-package magit)
-
-(use-package d2-mode)
-
-(use-package undo-tree
-  :init
-  (global-undo-tree-mode))
-
-;;helm
 (use-package helm
   :config
   (global-set-key (kbd "M-x") #'helm-M-x)
@@ -80,63 +51,100 @@
   (global-unset-key (kbd "C-x c"))
   (helm-mode 1))
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)'
-(setq helm-M-x-fuzzy-match t)
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match t)
-(setq helm-semantic-fuzzy-match t
-      helm-imeny-fuzzy-match t)
+(setq helm-M-x-fuzzy-match t
+      helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match t
+      helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match t)
 
-(global-set-key (kbd "C-x k") #'kill-this-buffer)
-
-;;yasnippet
-(use-package yasnippet
+(use-package undo-tree
   :init
-  (yas-global-mode 1))
+  (global-undo-tree-mode))
 
-;;which-key
 (use-package which-key
   :init
   (which-key-mode))
 
-(use-package elpy
-  :init
-  (elpy-enable))
+(use-package d2-mode)
+
+(use-package org
+  :straight (:type built-in))
+
+(setq org-startup-indented t
+      org-todo-keywords '((sequence "TODO" "WIP" "PAUSED" "|" "DONE" "OBSOLETE"))
+      org-todo-keyword-faces '(("WIP" . "SteelBlue1")
+			       ("PAUSED" . "MediumSlateBlue"))
+      org-agenda-files '("~/org-roam/daily")
+      org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
+
+(use-package org-roam
+  :config
+  (setq org-roam-directory (file-truename "~/org-roam"))
+  (org-roam-db-autosync-mode)
+  :after (org))
+
+(use-package org-roam-ui
+  :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :after org-roam
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+	org-roam-ui-follow t
+	org-roam-ui-update-on-save t
+	org-roam-ui-open-on-start t))
+
+(use-package magit)
 
 (use-package company
-  :config
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 2)
-  :init
-  (global-company-mode))
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 2)
+    :init
+    (global-company-mode))
 
-(use-package rust-mode
-  :config
-  (add-hook 'rust-mode-hook 'eglot-ensure))
+(use-package projectile
+  :config (projectile-mode +1)
+  :custom ((projectile-completion-system 'helm))
+  :bind
+  ("C-c p" . projectile-command-map))
 
-;; (use-package coverlay)
+(use-package treesit
+  :straight (:type built-in))
+(let* ((recipes '((c "https://github.com/tree-sitter/tree-sitter-c" nil nil nil nil)
+                  (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" nil nil nil nil))
+                  (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src/" nil nil)
+                  (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src" nil nil)
+                  (python "https://github.com/tree-sitter/tree-sitter-python" nil nil nil nil)
+                  (json "https://github.com/tree-sitter/tree-sitter-json" nil nil nil nil)
+                  (bash "https://github.com/tree-sitter/tree-sitter-bash" nil nil nil nil)
+                  (rust "https://github.com/tree-sitter/tree-sitter-rust" nil nil nil nil)
+                  (css "https://github.com/tree-sitter/tree-sitter-css" nil nil nil nil)
+                  (html "https://github.com/tree-sitter/tree-sitter-html" nil nil nil nil)
+                  (toml "https://github.com/tree-sitter/tree-sitter-toml" nil nil nil nil)
+                  (wgsl "https://github.com/szebniok/tree-sitter-wgsl" nil nil nil nil)))
+       (langs (mapcar #'car recipes)))
 
-;; (use-package origami)
-
-;; (use-package css-in-js-mode
-;;   :straight '(css-in-js-mode :type git :host github :repo "orzechowskid/tree-sitter-css-in-js"))
-
-;; (use-package tsx-mode
-;;   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el")
-;;   :after (coverlay css-in-js-mode origami))
+  (mapcar (lambda (arg) (add-to-list 'treesit-language-source-alist arg)) recipes)
+  (mapcar (lambda (lang) (unless (treesit-language-available-p lang)
+                           (treesit-install-language-grammar lang))) langs))
 
 (use-package tide
   :config
   (setq typescript-indent-level 2)
   (add-hook 'tsx-mode-hook #'setup-tide-mode))
 
-(use-package projectile
-  :config (projectile-mode +1)
-  :custom ((projectile-completion-system 'helm))
-  :bind
-  ("C-c p" . projectile-command-map)
-  ;; :init
-  ;; (when (file-directory-p "~/Projects/Code")
-  ;;   (setq projectile-project-search-path '("~/Projects/Code")))
-  ;; (setq projectile-switch-project-action #'projectile-dired)
-  )
+(use-package wgsl-ts-mode
+  :straight (wgsl-ts-mode :type git :host github :repo "acowley/wgsl-ts-mode")
+  :config
+  (add-hook 'wgsl-ts-mode 'turn-on-font-lock))
 
+(add-hook 'rust-ts-mode-hook 'eglot-ensure)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+
+(add-hook 'python-ts-mode-hook 'pyvenv-mode)
+(add-hook 'python-ts-mode-hook 'eglot-ensure)
+
+(use-package poetry)
