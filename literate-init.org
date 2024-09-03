@@ -41,11 +41,13 @@
         mode-require-final-newline nil
         inhibit-startup-message t
         backup-directory-alist '(("." . "~/.emacs_backups"))
-        undo-tree-history-directory-alist '(("." . "~/.emacs_undos")))
+        undo-tree-history-directory-alist '(("." . "~/.emacs_undos"))
+        help-window-select t)
 
   (setq-default fill-column 80)
 
   (global-set-key (kbd "C-x k") #'kill-this-buffer)
+  (global-set-key (kbd "C-c w") #'whitespace-mode)
 #+end_src
 
 ** Make ~dired~ less verbose by default
