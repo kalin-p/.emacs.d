@@ -98,6 +98,7 @@
 ** d2
 #+begin_src emacs-lisp :tangle init.el
   (use-package d2-mode)
+  (add-to-list 'auto-mode-alist '("\\.d2\\'" . d2-mode))
 #+end_src
 
 * ~org-mode~ defaults and ~org-roam~
