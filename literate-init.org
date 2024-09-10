@@ -231,12 +231,26 @@ built into emacs. Removing it for now to prevent it from messing up something
 
 ** Python
 #+begin_src emacs-lisp :tangle init.el
-  (add-hook 'python-ts-mode-hook 'pyvenv-mode)
-  (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  
+  (add-hook 'python-mode-hook 'pyvenv-mode)
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  ;; (with-eval-after-load 'eglot
+  ;;   (add-to-list 'eglot-server-programs
+  ;;                '(python-mode . ("ruff" "server")))
+  ;;   (add-hook 'after-save-hook 'eglot-format))
+
   (use-package poetry)
 #+end_src
 
+A function that looks for the entry for python in ~eglot-server-programs~ and
+replaces it with ~(setcdr)~
+#+begin_src emacs-lisp
+  (mapcar (lambda (item)
+            (if (and
+                 (listp (car item))
+                 (member 'python-mode (car item)))
+                (setcdr item '("ruff" "server"))))
+          eglot-server-programs)
+#+end_src
 ** YAML
 #+begin_src emacs-lisp :tangle init.el
   (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-ts-mode))
