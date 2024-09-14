@@ -41,11 +41,17 @@
         mode-require-final-newline nil
         inhibit-startup-message t
         backup-directory-alist '(("." . "~/.emacs_backups"))
-        undo-tree-history-directory-alist '(("." . "~/.emacs_undos")))
+        undo-tree-history-directory-alist '(("." . "~/.emacs_undos"))
+        eldoc-echo-area-prefer-doc-buffer t)
 
   (setq-default fill-column 80)
 
   (global-set-key (kbd "C-x k") #'kill-this-buffer)
+#+end_src
+** Ibuffer
+#+begin_src emacs-lisp :tangle init.el
+  (global-set-key (kbd "C-X C-b") #'ibuffer)
+  (add-hook 'ibuffer-mode-hook 'ibuffer-set-filter-groups-by-mode)
 #+end_src
 
 ** Make ~dired~ less verbose by default
