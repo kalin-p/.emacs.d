@@ -88,20 +88,21 @@
 ** ~undo-tree~
 #+begin_src emacs-lisp :tangle init.el
   (use-package undo-tree
-    :init
+    :config
     (global-undo-tree-mode))
 #+end_src
 
 ** Tooltips - ~which-key~
 #+begin_src emacs-lisp :tangle init.el
   (use-package which-key
-    :init
+    :config
     (which-key-mode))
 #+end_src
 
 ** d2
 #+begin_src emacs-lisp :tangle init.el
-  (use-package d2-mode)
+  (use-package d2-mode
+    :config (add-to-list 'auto-mode-alist '("\\.d2\\'" . d2-mode)))
 #+end_src
 
 ** Treemacs
@@ -267,7 +268,6 @@
       :config
       (setq company-idle-delay 0)
       (setq company-minimum-prefix-length 2)
-      :init
       (global-company-mode))
 #+end_src
 ** Project navigation
@@ -282,25 +282,26 @@
 ** Syntax highlighting ~tree-sitter~
 #+begin_src emacs-lisp :tangle init.el  
   (use-package treesit
-    :straight (:type built-in))
-  
-  (let* ((recipes '((c "https://github.com/tree-sitter/tree-sitter-c" nil nil nil nil)
-                    (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" nil nil nil nil))
-                    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src/" nil nil)
-                    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src" nil nil)
-                    (python "https://github.com/tree-sitter/tree-sitter-python" nil nil nil nil)
-                    (json "https://github.com/tree-sitter/tree-sitter-json" nil nil nil nil)
-                    (bash "https://github.com/tree-sitter/tree-sitter-bash" nil nil nil nil)
-                    (rust "https://github.com/tree-sitter/tree-sitter-rust" nil nil nil nil)
-                    (css "https://github.com/tree-sitter/tree-sitter-css" nil nil nil nil)
-                    (html "https://github.com/tree-sitter/tree-sitter-html" nil nil nil nil)
-                    (toml "https://github.com/tree-sitter/tree-sitter-toml" nil nil nil nil)
-                    (wgsl "https://github.com/szebniok/tree-sitter-wgsl" nil nil nil nil)))
-         (langs (mapcar #'car recipes)))
+    :straight (:type built-in)
+    :config
+    (let* ((recipes '((c "https://github.com/tree-sitter/tree-sitter-c" nil nil nil nil)
+                      (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" nil nil nil nil))
+                      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src/" nil nil)
+                      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src" nil nil)
+                      (python "https://github.com/tree-sitter/tree-sitter-python" nil nil nil nil)
+                      (json "https://github.com/tree-sitter/tree-sitter-json" nil nil nil nil)
+                      (bash "https://github.com/tree-sitter/tree-sitter-bash" nil nil nil nil)
+                      (rust "https://github.com/tree-sitter/tree-sitter-rust" nil nil nil nil)
+                      (css "https://github.com/tree-sitter/tree-sitter-css" nil nil nil nil)
+                      (html "https://github.com/tree-sitter/tree-sitter-html" nil nil nil nil)
+                      (toml "https://github.com/tree-sitter/tree-sitter-toml" nil nil nil nil)
+                      (wgsl "https://github.com/szebniok/tree-sitter-wgsl" nil nil nil nil)))
+           (langs (mapcar #'car recipes)))
 
-    (mapcar (lambda (arg) (add-to-list 'treesit-language-source-alist arg)) recipes)
-    (mapcar (lambda (lang) (unless (treesit-language-available-p lang)
-                             (treesit-install-language-grammar lang))) langs))
+      (mapcar (lambda (arg) (add-to-list 'treesit-language-source-alist arg)) recipes)
+      (mapcar (lambda (lang) (unless (treesit-language-available-p lang)
+                               (treesit-install-language-grammar lang)))
+              langs)))
 #+end_src
 
 ** TypeScript
@@ -321,8 +322,11 @@
 
 ** Rust
 #+begin_src emacs-lisp :tangle init.el
-  (add-hook 'rust-ts-mode-hook 'eglot-ensure)
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+  (use-package rust-ts-mode
+    :straight (:type built-in)
+    :config
+    (add-hook 'rust-ts-mode-hook 'eglot-ensure)
+    :mode "\\.rs\\'")
 #+end_src
 
 ** Python
@@ -330,5 +334,6 @@
   (add-hook 'python-ts-mode-hook 'pyvenv-mode)
   (add-hook 'python-ts-mode-hook 'eglot-ensure)
 
-  (use-package poetry)
+  (use-package poetry
+    :after python-mode)
 #+end_src
