@@ -59,6 +59,7 @@
 ** Make ~dired~ less verbose by default
 #+begin_src emacs-lisp :tangle init.el
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+  (define-key dired-mode-map (kbd "C-c w") #'wdired-change-to-wdired-mode)
 #+end_src
 
 ** Theme
