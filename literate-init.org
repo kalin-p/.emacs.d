@@ -56,10 +56,14 @@
   (add-hook 'ibuffer-mode-hook 'ibuffer-set-filter-groups-by-mode)
 #+end_src
 
-** Make ~dired~ less verbose by default
+** Configure ~dired~
 #+begin_src emacs-lisp :tangle init.el
-  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-  (define-key dired-mode-map (kbd "C-c w") #'wdired-change-to-wdired-mode)
+  (use-package dired
+    :straight (:type built-in)
+    :config
+    (add-hook 'dired-mode-hook 'dired-hide-details-mode) ;; make less verbose by
+                                                         ;; default
+    (define-key dired-mode-map (kbd "C-c w") #'wdired-change-to-wdired-mode))
 #+end_src
 
 ** Theme
@@ -234,11 +238,11 @@
     :straight (:type built-in))
 
   (setq org-startup-indented t
-	org-todo-keywords '((sequence "TODO" "WIP" "PAUSED" "|" "DONE" "OBSOLETE"))
-	org-todo-keyword-faces '(("WIP" . "SteelBlue1")
-				 ("PAUSED" . "MediumSlateBlue"))
-	org-agenda-files '("~/org-roam/daily")
-	org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
+        org-todo-keywords '((sequence "TODO" "WIP" "PAUSED" "|" "DONE" "OBSOLETE"))
+        org-todo-keyword-faces '(("WIP" . "SteelBlue1")
+                                 ("PAUSED" . "MediumSlateBlue"))
+        org-agenda-files '("~/org-roam/daily")
+        org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
 
   (use-package org-roam
     :config
@@ -255,9 +259,9 @@
     ;;  :hook (after-init . org-roam-ui-mode)
     :config
     (setq org-roam-ui-sync-theme t
-	  org-roam-ui-follow t
-	  org-roam-ui-update-on-save t
-	  org-roam-ui-open-on-start t))
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 #+end_src
 
 * Development
@@ -289,8 +293,8 @@
     :config
     (let* ((recipes '((c "https://github.com/tree-sitter/tree-sitter-c" nil nil nil nil)
                       (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" nil nil nil nil))
-                      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src/" nil nil)
-                      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src" nil nil)
+                      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src/" nil nil)
+                      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src" nil nil)
                       (python "https://github.com/tree-sitter/tree-sitter-python" nil nil nil nil)
                       (json "https://github.com/tree-sitter/tree-sitter-json" nil nil nil nil)
                       (bash "https://github.com/tree-sitter/tree-sitter-bash" nil nil nil nil)
