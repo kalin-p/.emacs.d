@@ -54,6 +54,19 @@
 #+begin_src emacs-lisp :tangle init.el
   (global-set-key (kbd "C-X C-b") #'ibuffer)
   (add-hook 'ibuffer-mode-hook 'ibuffer-set-filter-groups-by-mode)
+
+  (defun custom-ibuffer-update (&optional arg)
+    "A custom function for updating IBuffer, that also refreshes
+  filter groups"
+    (interactive "P")
+    (if arg
+        (ibuffer-update arg)
+      (ibuffer-update nil))
+    (ibuffer-set-filter-groups-by-mode))
+
+  (define-key ibuffer-mode-map (kbd "g") #'custom-ibuffer-update)
+
+
 #+end_src
 
 ** Configure ~dired~
