@@ -271,15 +271,18 @@ Mostly brought this to get fontified docs in ElDoc.
 * ~org-mode~ defaults and ~org-roam~
 #+begin_src emacs-lisp :tangle init.el
   (use-package org
-    :straight (:type built-in))
+    :straight (:type built-in)
+    :config
+    (setq org-startup-indented t
+      org-todo-keywords '((sequence "TODO" "WIP" "WAITING" "|" "DONE" "OBSOLETE"))
+      org-todo-keyword-faces '(("TODO" . "YellowGreen")
+                               ("WIP" . "SteelBlue1")
+                               ("WAITING" . "DarkOrange"))
+      org-agenda-files '("~/org-roam/daily")
+      org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 '((python . t))))
 
-  (setq org-startup-indented t
-        org-todo-keywords '((sequence "TODO" "WIP" "WAITING" "|" "DONE" "OBSOLETE"))
-        org-todo-keyword-faces '(("TODO" . "YellowGreen")
-                                 ("WIP" . "SteelBlue1")
-                                 ("WAITING" . "DarkOrange"))
-        org-agenda-files '("~/org-roam/daily")
-        org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
 
   (use-package org-roam
     :config
