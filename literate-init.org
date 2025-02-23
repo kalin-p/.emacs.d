@@ -34,7 +34,6 @@
   (delete-selection-mode 1)
   (global-display-line-numbers-mode 1)
   (column-number-mode)
-  (desktop-save-mode 1)
   (global-visual-line-mode 1)
 
   (setq visible-bell 1
@@ -43,7 +42,8 @@
         backup-directory-alist '(("." . "~/.emacs_backups"))
         undo-tree-history-directory-alist '(("." . "~/.emacs_undos"))
         eldoc-echo-area-prefer-doc-buffer t
-        help-window-select t)
+        help-window-select t
+        tab-always-indent 'complete)
 
   (setq-default fill-column 80)
 
@@ -94,7 +94,7 @@
 #+end_src
 
 ** Search with ~helm~
-#+begin_src emacs-lisp :tangle init.el
+#+begin_src emacs-lisp :tangle no
   (use-package helm
     :config
     (global-set-key (kbd "M-x") #'helm-M-x)
@@ -111,6 +111,39 @@
           helm-recentf-fuzzy-match t
           helm-semantic-fuzzy-match t
           helm-imenu-fuzzy-match t))
+#+end_src
+
+** ~orderless~
+#+begin_src emacs-lisp :tangle init.el
+  (use-package orderless
+    :ensure t
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+** ~vertico~
+#+begin_src emacs-lisp :tangle init.el
+  (use-package vertico
+    :init
+    (vertico-mode))
+#+end_src
+
+** ~corfu~
+#+begin_src emacs-lisp :tangle init.el
+  (use-package corfu
+    :init
+    (global-corfu-mode))
+#+end_src
+
+** ~marginalia~
+#+begin_src emacs-lisp :tangle init.el
+    (use-package marginalia
+      :bind (:map minibuffer-local-map
+                  ("M-A" . marginalia-cycle))
+      :init
+      (marginalia-mode))
 #+end_src
 
 ** ~undo-tree~
@@ -142,7 +175,7 @@
     :config (add-to-list 'auto-mode-alist '("\\.d2\\'" . d2-mode)))
 #+end_src
 
-** Treemacs
+** WAITING Treemacs
 #+begin_src emacs-lisp :tangle no
   (use-package treemacs
     :ensure t
@@ -310,13 +343,18 @@ Mostly brought this to get fontified docs in ElDoc.
   (use-package magit)
 #+end_src
 ** Completions
-#+begin_src emacs-lisp :tangle init.el
+#+begin_src emacs-lisp :tangle no
   (use-package company
       :config
       (setq company-idle-delay 0)
       (setq company-minimum-prefix-length 2)
       (global-company-mode))
 #+end_src
+** Multiple cursors
+#+begin_src emacs-lisp :tangle init.el
+  (use-package multiple-cursors)
+#+end_src
+
 ** Project navigation
 #+begin_src emacs-lisp :tangle init.el
   (use-package projectile
@@ -361,6 +399,13 @@ built into emacs. Removing it for now to prevent it from messing up something
     :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold"))
 #+end_src
 
+** ~caddyfile~
+#+begin_src emacs-lisp :tangle init.el
+  (use-package caddyfile-mode
+    :ensure t
+    :mode (("Caddyfile\\'" . caddyfile-mode)
+           ("caddy\\.conf\\'" . caddyfile-mode)))
+#+end_src
 ** TypeScript
 #+begin_src emacs-lisp :tangle init.el
   (use-package typescript-ts-mode
@@ -388,8 +433,9 @@ built into emacs. Removing it for now to prevent it from messing up something
 
 ** Python
 #+begin_src emacs-lisp :tangle init.el
-
   (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'python-ts-mode-hook 'eglot-ensure)
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 #+end_src
 
 A function that looks for the entry for python in ~eglot-server-programs~ and
