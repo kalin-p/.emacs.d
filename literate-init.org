@@ -314,13 +314,21 @@ Mostly brought this to get fontified docs in ElDoc.
       org-agenda-files '("~/org-roam/daily")
       org-time-stamp-custom-formats '("%a %d %b %Y %H:%M"))
     (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((python . t))))
+                                 '((python . t)))
+    (setq org-babel-python-command "python3"))
 
 
   (use-package org-roam
     :config
-    (setq org-roam-directory (file-truename "~/org-roam"))
+    (setq org-roam-directory (file-truename "~/org-roam")
+          org-roam-capture-templates (append org-roam-capture-templates
+                                             '(("p" "proc_anatomy" plain "%?"
+                                                :target (file+head "proc_anatomy_kb/%<%Y%m%d%H%M%S>-${slug}.org"
+                                                                   "#+title: ${title}\n")
+                                                :unnarrowed t))))
     (org-roam-db-autosync-mode)
+
+
     :after (org))
 
   (use-package org-roam-ui
@@ -359,7 +367,7 @@ Mostly brought this to get fontified docs in ElDoc.
 #+begin_src emacs-lisp :tangle init.el
   (use-package projectile
     :config (projectile-mode +1)
-    :custom ((projectile-completion-system 'helm))
+    :custom ((projectile-completion-system 'default))
     :bind
     ("C-c p" . projectile-command-map))
 #+end_src
@@ -394,9 +402,9 @@ Mostly brought this to get fontified docs in ElDoc.
 ** ~tree-sitter~-based folding
 NOTE: this uses the old ~tree-sitter~ package instead of ~treesit~ which is now
 built into emacs. Removing it for now to prevent it from messing up something
-#+begin_src emacs-lisp
-  (use-package ts-fold
-    :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold"))
+#+begin_src emacs-lisp :tangle init.el
+  (use-package treesit-fold
+    :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
 #+end_src
 
 ** ~caddyfile~
