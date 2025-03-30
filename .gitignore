@@ -51,7 +51,6 @@ flycheck_*.el
 # network security
 /network-security.data
 
-init.el
 recentf
 session.*
 org-roam.db
