@@ -23,6 +23,7 @@
 (global-display-line-numbers-mode 1)
 (column-number-mode)
 (global-visual-line-mode 1)
+(add-to-list 'default-frame-alist '(alpha-background . 85))
 
 (setq visible-bell 1
       mode-require-final-newline nil
@@ -35,7 +36,7 @@
 
 (setq-default fill-column 80)
 
-(global-set-key (kbd "C-x k") #'kill-this-buffer)
+(global-set-key (kbd "C-x k") #'kill-current-buffer)
 (global-set-key (kbd "C-c w") #'whitespace-mode)
 (global-set-key (kbd "C-c s") #'window-swap-states)
 
@@ -178,6 +179,7 @@ filter groups"
                     (toml "https://github.com/tree-sitter/tree-sitter-toml" nil nil nil nil)
                     (yaml "https://github.com/ikatyang/tree-sitter-yaml" nil nil nil nil)
                     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile.git")
+		    (nix "https://github.com/nix-community/tree-sitter-nix.git")
                     (wgsl "https://github.com/szebniok/tree-sitter-wgsl" nil nil nil nil)))
          (langs (mapcar #'car recipes)))
 
@@ -203,6 +205,10 @@ filter groups"
   :straight (wgsl-ts-mode :type git :host github :repo "acowley/wgsl-ts-mode")
   :config
   (add-hook 'wgsl-ts-mode 'turn-on-font-lock))
+
+(use-package nix-mode
+  :straight (nix-mode :type git :host github :repo "NixOS/nix-mode")
+  :mode "\\.nix\\'")
 
 (use-package rust-ts-mode
   :straight (:type built-in)
