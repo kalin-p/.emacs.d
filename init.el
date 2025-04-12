@@ -53,8 +53,8 @@
 filter groups"
     (interactive "P")
     (if arg
-	  (ibuffer-update arg)
-	(ibuffer-update nil))
+	(ibuffer-update arg)
+      (ibuffer-update nil))
     (ibuffer-set-filter-groups-by-mode))
 
   (define-key ibuffer-mode-map (kbd "g") #'custom-ibuffer-update)
@@ -134,7 +134,8 @@ filter groups"
                                            '(("p" "proc_anatomy" plain "%?"
                                               :target (file+head "proc_anatomy_kb/%<%Y%m%d%H%M%S>-${slug}.org"
                                                                  "#+title: ${title}\n")
-                                              :unnarrowed t))))
+                                              :unnarrowed t)))
+        org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   (org-roam-db-autosync-mode)
 
 
@@ -160,6 +161,7 @@ filter groups"
 (use-package projectile
   :config (projectile-mode +1)
   :custom ((projectile-completion-system 'default))
+  :demand t
   :bind
   ("C-c p" . projectile-command-map))
 
@@ -179,7 +181,7 @@ filter groups"
                     (toml "https://github.com/tree-sitter/tree-sitter-toml" nil nil nil nil)
                     (yaml "https://github.com/ikatyang/tree-sitter-yaml" nil nil nil nil)
                     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile.git")
-		    (nix "https://github.com/nix-community/tree-sitter-nix.git")
+  		  (nix "https://github.com/nix-community/tree-sitter-nix.git")
                     (wgsl "https://github.com/szebniok/tree-sitter-wgsl" nil nil nil nil)))
          (langs (mapcar #'car recipes)))
 
@@ -199,7 +201,8 @@ filter groups"
 (use-package typescript-ts-mode
   :config
   (setq typescript-ts-mode-indent-offset 4)
-  (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
+  (add-hook 'typescript-ts-base-mode-hook 'eglot-ensure)
+  (add-hook 'typescript-ts-base-mode-hook (lambda () (setq indent-tabs-mode nil))))
 
 (use-package wgsl-ts-mode
   :straight (wgsl-ts-mode :type git :host github :repo "acowley/wgsl-ts-mode")
