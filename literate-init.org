@@ -94,6 +94,13 @@
   (load-theme 'timu-spacegrey t)
 #+end_src
 
+#+begin_src emacs-lisp :tangle no
+  (use-package tokyonight-storm-theme
+    :straight (tokyonight-storm-theme :type git :host github :repo "MostlyAbsent/tokyonight-emacs"))
+  (load-theme 'tokyonight-storm t)
+  (load-theme 'tokyonight-moon t)
+#+end_src
+
 ** Search with ~helm~
 #+begin_src emacs-lisp :tangle no
   (use-package helm
@@ -326,7 +333,8 @@ Mostly brought this to get fontified docs in ElDoc.
                                              '(("p" "proc_anatomy" plain "%?"
                                                 :target (file+head "proc_anatomy_kb/%<%Y%m%d%H%M%S>-${slug}.org"
                                                                    "#+title: ${title}\n")
-                                                :unnarrowed t))))
+                                                :unnarrowed t)))
+          org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
     (org-roam-db-autosync-mode)
 
 
@@ -369,6 +377,7 @@ Mostly brought this to get fontified docs in ElDoc.
   (use-package projectile
     :config (projectile-mode +1)
     :custom ((projectile-completion-system 'default))
+    :demand t
     :bind
     ("C-c p" . projectile-command-map))
 #+end_src
@@ -421,7 +430,8 @@ built into emacs. Removing it for now to prevent it from messing up something
   (use-package typescript-ts-mode
     :config
     (setq typescript-ts-mode-indent-offset 4)
-    (add-hook 'typescript-ts-mode-hook 'eglot-ensure))
+    (add-hook 'typescript-ts-base-mode-hook 'eglot-ensure)
+    (add-hook 'typescript-ts-base-mode-hook (lambda () (setq indent-tabs-mode nil))))
 #+end_src
 
 ** WGSL
